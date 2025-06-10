@@ -1,0 +1,59 @@
+--- a/Configure
++++ b/Configure
+@@ -7873,10 +7873,10 @@ $cat >malloc.c <<END
+ #include <stdlib.h>
+ #endif
+ #ifdef TRY_MALLOC
+-void *malloc();
++void *malloc(size_t);
+ #endif
+ #ifdef TRY_FREE
+-void free();
++void free(void *);
+ #endif
+ END
+ case "$malloctype" in
+--- a/ext/GDBM_File/GDBM_File.xs
++++ b/ext/GDBM_File/GDBM_File.xs
+@@ -123,7 +123,7 @@ gdbm_DESTROY(db)
+ 	    if (db->filter[i])
+ 		SvREFCNT_dec(db->filter[i]);
+ 	} while (i-- > 0);
+-	safefree(db);
++	safefree((char *)db);
+ 
+ #define gdbm_FETCH(db,key)			gdbm_fetch(db->dbp,key)
+ datum_value
+--- a/ext/NDBM_File/NDBM_File.xs
++++ b/ext/NDBM_File/NDBM_File.xs
+@@ -89,7 +89,7 @@ ndbm_DESTROY(db)
+ 	    if (db->filter[i])
+ 		SvREFCNT_dec(db->filter[i]);
+ 	} while (i-- > 0);
+-	safefree(db);
++	safefree((char *)db);
+ 
+ #define ndbm_FETCH(db,key)			dbm_fetch(db->dbp,key)
+ datum_value
+--- a/ext/ODBM_File/ODBM_File.xs
++++ b/ext/ODBM_File/ODBM_File.xs
+@@ -155,7 +155,7 @@ DESTROY(db)
+ 	    if (db->filter[i])
+ 		SvREFCNT_dec(db->filter[i]);
+ 	} while (i-- > 0);
+-	safefree(db);
++	safefree((char *)db);
+ 
+ datum_value
+ odbm_FETCH(db, key)
+--- a/ext/SDBM_File/SDBM_File.xs
++++ b/ext/SDBM_File/SDBM_File.xs
+@@ -69,7 +69,7 @@ sdbm_DESTROY(db)
+ 		if (db->filter[i])
+ 		    SvREFCNT_dec_NN(db->filter[i]);
+ 	    } while (i-- > 0);
+-	    safefree(db) ;
++	    safefree((char *)db) ;
+ 	}
+ 
+ datum_value
